@@ -1,0 +1,40 @@
+[project]
+name = "nibble-pet"
+version = "0.1.0"
+description = "A pixel-art desktop pet that lives on top of your windows (macOS)."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Aryaman Chhikara" }]
+classifiers = [
+    "Environment :: MacOS X :: Cocoa",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Topic :: Games/Entertainment",
+]
+dependencies = [
+    "pyobjc-core>=12.2",
+    "pyobjc-framework-Cocoa>=12.2",
+    "pyobjc-framework-coretext>=12.2",
+    "pyobjc-framework-Quartz>=12.2",
+]
+
+[project.scripts]
+nibble = "nibble.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nibble"]
+
+[tool.uv]
+# Stick to uv-managed interpreters: they're what py2app is tested against here,
+# and it keeps Anaconda/Homebrew Pythons out of the venv.
+python-preference = "only-managed"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
