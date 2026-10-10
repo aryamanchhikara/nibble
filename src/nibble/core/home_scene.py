@@ -317,10 +317,13 @@ class HomeRenderer:
             self._card(c, model, i, pet, dy)
         self._start_button(c)
         self.text(c, self.small, "< >  choose      enter  start", W // 2, START.y + START.h + 2, C["dim"], center=True)
-        link = "Describe your own pet..."
-        w = self.text(c, self.small, link, W // 2, LINK.y, C["dim"], center=True)
-        for xx in range(W // 2 - w // 2, W // 2 + w // 2, 2):
-            c.set(xx, LINK.y + 10, C["dim"])  # dotted underline
+        if model.custom_pets:
+            link = "Describe your own pet..."
+            w = self.text(c, self.small, link, W // 2, LINK.y, C["dim"], center=True)
+            for xx in range(W // 2 - w // 2, W // 2 + w // 2, 2):
+                c.set(xx, LINK.y + 10, C["dim"])  # dotted underline
+        else:
+            self.text(c, self.small, "Custom pets: coming soon", W // 2, LINK.y, C["dim"], center=True)  # not a link
         if toast:
             self._toast(c, toast)
         return c

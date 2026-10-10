@@ -18,6 +18,10 @@ BOUNCE = (0, -3, -4, -3, -1, 0)  # card offset per animation step after selectin
 BOUNCE_STEP = 0.05  # seconds per step
 HAPPY_FOR = 0.9  # the newly selected pet cheers this long
 
+# "Describe your own pet…" (LLM-generated pets, needs an OpenRouter key). Off for
+# v0.1: the page shows a plain "coming soon" note instead and never asks for a key.
+CUSTOM_PETS = False
+
 
 @dataclass(frozen=True)
 class Box:
@@ -81,6 +85,7 @@ class HomeModel:
     dialog: Dialog | None = None
     toast: tuple[str, float] | None = None
     version: int = 0  # bumped whenever something static on the page changes
+    custom_pets: bool = CUSTOM_PETS  # show the "Describe your own pet…" link
 
     def __post_init__(self) -> None:
         for pet in self.pets:
@@ -130,7 +135,7 @@ class HomeModel:
             return self._toggle_sound()
         if START.contains(x, y):
             return self._start()
-        if LINK.contains(x, y):
+        if self.custom_pets and LINK.contains(x, y):
             return [Action("describe")]
         for i, pet in enumerate(self.pets):
             if pet.accessories and toggle_box(i).contains(x, y):

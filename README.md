@@ -4,7 +4,7 @@ A pixel-art desktop pet for macOS that lives on top of your windows. It hangs ou
 
 ![The home page: choose your nibble](docs/screenshots/home.png)
 
-> **Status:** the home page and its four built-in pets work with no API key and no setup, along with window life, cheering and peeking. Describing your own pet (LLM-generated) and the downloadable `.app`/`.dmg` are on the way. Full install instructions land with the `.dmg`.
+> **Status:** the home page and its four built-in pets work with no setup, along with window life, cheering and peeking. Custom pets are planned for a later update. The downloadable `.app`/`.dmg` is on the way, and full install instructions land with it.
 
 ## Run it (development)
 
@@ -26,13 +26,12 @@ On first launch (and any time from the menu bar → **Choose your nibble…**) a
 - **Pearl's glasses:** her card has a **Glasses: ON/OFF** switch (or press G). The preview updates live, and so does a Pearl who's already out.
 - **Starting:** **START** (or Enter) drops the pet onto your window and closes the page. If a pet is already out, it asks whether to **swap** or **add** another.
 - **Sound:** retro sound effects are off until you click the speaker in the top-right corner (or press M).
-- **Your own pet:** **Describe your own pet…** at the bottom is for people with an OpenRouter key (coming in the next update).
 
 The page is drawn at its true 384×216 resolution and scaled up by a whole number with no smoothing, so it's pixel-crisp on Retina and non-Retina displays. Your pets and their accessories are remembered, and they come back on the next launch.
 
 ### The cast
 
-Four hand-made pets, built in to work with no key:
+Four hand-made pets, built in, no setup needed:
 
 ![The cast on light and dark windows](docs/screenshots/cast.png)
 
@@ -183,7 +182,7 @@ Every line is at most 60 characters. `nibble.core.validate` checks all of this, 
 
 ### Accessories
 
-A pet can have optional overlays, like Pearl's glasses. Pets without them (Archie, Dewey, Kernel, anything generated so far) keep working unchanged. Two optional keys:
+A pet can have optional overlays, like Pearl's glasses. Pets without them (Archie, Dewey, Kernel) keep working unchanged. Two optional keys:
 
 ```jsonc
 "anchors": {

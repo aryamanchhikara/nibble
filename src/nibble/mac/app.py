@@ -77,6 +77,8 @@ class AppDelegate(NSObject):
 
     def _restore_lineup(self) -> bool:
         for entry in self.director.settings.pets:
+            if entry["id"] not in CAST:
+                continue  # e.g. Pip from a development run: v0.1 ships the cast only
             spec = _builtin(entry["id"])
             if spec is not None:
                 self.director.spawn(spec, frozenset(entry.get("worn", [])))

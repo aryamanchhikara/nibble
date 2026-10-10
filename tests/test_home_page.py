@@ -108,7 +108,8 @@ def test_dialog_buttons_and_escape():
 def test_escape_closes_and_the_link_and_speaker_work():
     m = model()
     assert kinds(m.press("escape", 1.0)) == ["close"]
-    assert kinds(m.click(LINK.x + 4, LINK.y + 4, 1.0)) == ["describe"]
+    assert m.click(LINK.x + 4, LINK.y + 4, 1.0) == []  # custom pets are off for v0.1
+    assert kinds(model(custom_pets=True).click(LINK.x + 4, LINK.y + 4, 1.0)) == ["describe"]
     acts = m.click(SOUND.x + 2, SOUND.y + 2, 1.0)
     assert ("sound", True) in [(a.kind, a.on) for a in acts] and m.sound
 
@@ -191,6 +192,28 @@ def test_glasses_toggle_shows_up_in_the_preview(renderer):
     assert lens_visible()
     m.press("g", 5.0)
     assert not lens_visible()
+
+
+class RecordingFont(BoxFont):
+    def __init__(self):
+        self.seen: list[str] = []
+
+    def mask(self, text: str) -> Mask:
+        self.seen.append(text)
+        return super().mask(text)
+
+
+def test_custom_pets_show_as_coming_soon_until_switched_on():
+    def page_text(**kw) -> list[str]:
+        small = RecordingFont()
+        HomeRenderer(BoxFont(), small).render(model(**kw), 5.0)
+        return small.seen
+
+    off = page_text()
+    assert "Custom pets: coming soon" in off
+    assert not any("Describe" in t or "openrouter" in t.lower() or "api key" in t.lower() for t in off)
+    on = page_text(custom_pets=True)
+    assert "Describe your own pet..." in on and "Custom pets: coming soon" not in on
 
 
 def test_animation_actually_animates(renderer):
