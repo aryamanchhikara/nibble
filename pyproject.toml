@@ -22,7 +22,11 @@ dependencies = [
 nibble = "nibble.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "py2app>=0.28.10",
+    "pytest>=8",
+    "setuptools>=84.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -32,8 +36,9 @@ build-backend = "hatchling.build"
 packages = ["src/nibble"]
 
 [tool.uv]
-# Stick to uv-managed interpreters: they're what py2app is tested against here,
-# and it keeps Anaconda/Homebrew Pythons out of the venv.
+# Stick to uv-managed interpreters for development: it keeps Anaconda/Homebrew
+# Pythons out of the venv. py2app can't bundle them, so scripts/build_dmg.sh
+# builds the app with python.org's Python in its own environment instead.
 python-preference = "only-managed"
 
 [tool.pytest.ini_options]

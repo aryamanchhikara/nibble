@@ -4,7 +4,23 @@ A pixel-art desktop pet for macOS that lives on top of your windows. It hangs ou
 
 ![The home page: choose your nibble](docs/screenshots/home.png)
 
-> **Status:** the home page and its four built-in pets work with no setup, along with window life, cheering and peeking. Custom pets are planned for a later update. The downloadable `.app`/`.dmg` is on the way, and full install instructions land with it.
+> **Status (v0.1.0):** the home page and its four built-in pets work with no setup, along with window life, cheering and peeking. It ships as `Nibble.dmg` (see [Install](#install)). Custom pets are planned for a later update.
+
+## Install
+
+**Needs:** a Mac with Apple Silicon or Intel, on macOS 11 (Big Sur) or later. The app is a universal build. It has been tested on macOS 26 with Apple Silicon. Intel and older macOS versions are supported by the build but untested.
+
+1. Open `Nibble.dmg` and drag **Nibble** onto **Applications**.
+2. Open Nibble from Applications. nibble isn't notarized by Apple yet, so the first time macOS says it can't verify it and won't open it. Click **Done**.
+3. Open **System Settings → Privacy & Security**, scroll down to the message about Nibble being blocked, and click **Open Anyway**. Confirm with your password or Touch ID. You only do this once.
+
+If **Open Anyway** doesn't appear or doesn't work, run this in Terminal, then open Nibble normally:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Nibble.app
+```
+
+Nibble lives in the menu bar, with no Dock icon. Quit it from the menu bar icon. It asks for no permissions (see [Privacy and permissions](#privacy-and-permissions)). To uninstall, drag Nibble to the Trash. Its settings are in `~/Library/Application Support/nibble`.
 
 ## Run it (development)
 
@@ -209,7 +225,15 @@ uv run python scripts/cast_sheets.py                    # sprite sheets -> docs/
 uv run python scripts/cast_showcase.py                  # the cast on light/dark windows
 NIBBLE_LOG=DEBUG uv run nibble run                      # log every move and line
 NIBBLE_HOME=/tmp/fresh uv run nibble run                # pretend it's the first launch
+uv run python scripts/make_icon.py                      # redraw the placeholder app icon
+scripts/build_dmg.sh                                    # dist/Nibble.app and dist/Nibble.dmg (see below)
 ```
+
+### Building the app
+
+`scripts/build_dmg.sh` builds `Nibble.app` with py2app, ad-hoc signs it, checks that every binary inside has both `x86_64` and `arm64`, and wraps it in a drag-to-Applications `Nibble.dmg` (all in `dist/`). The py2app config is in `packaging/macos/`.
+
+It needs the python.org Python 3.13 (the universal2 installer from python.org) in `/Library/Frameworks`. uv's own Pythons can't be bundled by py2app, so the script builds in a separate environment, `build/venv-macos`, with the versions pinned in `uv.lock`. Day-to-day development still uses uv's Python. There's no Developer ID, so the app is ad-hoc signed and not notarized, which is why the Gatekeeper step under [Install](#install) is needed.
 
 `src/nibble/core` is plain Python (geometry, physics, behaviour, peeking, cheers, validation, the home page's model and pixel renderer) and is unit-tested. `src/nibble/mac` is the thin PyObjC layer that reads the desktop and draws.
 
